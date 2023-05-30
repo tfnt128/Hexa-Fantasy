@@ -209,6 +209,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: hex_forest_detail
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b36a82e559044c3489f0b7d4fc1870b2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b36a82e559044c3489f0b7d4fc1870b2, type: 3}
 --- !u!4 &6210113749774154441 stripped

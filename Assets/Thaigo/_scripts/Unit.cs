@@ -42,7 +42,7 @@ public class Unit : MonoBehaviour
 
     private IEnumerator RotationCoroutine(Vector3 endPosition, float rotationDuration)
     {
-        Quaternion startRotation = transform.rotation;
+        Quaternion startRotation = transform.localRotation;
         endPosition.y = transform.position.y;
         Vector3 direction = endPosition - transform.position;
         Quaternion endRotation = Quaternion.LookRotation(direction, Vector3.up);
@@ -54,10 +54,10 @@ public class Unit : MonoBehaviour
             {
                 timeElapsed += Time.deltaTime;
                 float lerpStep = timeElapsed / rotationDuration; // 0-1
-                transform.rotation = Quaternion.Lerp(startRotation, endRotation, lerpStep);
+                transform.localRotation = Quaternion.Lerp(startRotation, endRotation, lerpStep);
                 yield return null;
             }
-            transform.rotation = endRotation;
+            transform.localRotation = endRotation;
         }
         StartCoroutine(MovementCoroutine(endPosition));
     }
@@ -87,5 +87,19 @@ public class Unit : MonoBehaviour
             Debug.Log("Movement finished!");
             MovementFinished?.Invoke(this);
         }
+    }
+    public BattleSystem battle;
+    public GameObject normalCamera;
+    public GameObject combatCamera;
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            normalCamera.SetActive(false);
+            combatCamera.SetActive(true);
+            battle.state = BattleState.START;
+            StartCoroutine(battle.SetupBattle());
+        }
+
     }
 }
