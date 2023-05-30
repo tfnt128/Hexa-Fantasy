@@ -18,9 +18,14 @@ public class Unit : MonoBehaviour
 
     public event Action<Unit> MovementFinished;
 
+    private Animator anim;
+    private Rigidbody rb;
+
     private void Awake()
     {
         glowHighlight = GetComponent<GlowHighlight>();
+        anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
     }
 
     public void Deselect()
@@ -35,6 +40,7 @@ public class Unit : MonoBehaviour
 
     public void MoveThroughPath(List<Vector3> currentPath)
     {
+        anim.SetBool("IsWalking", true);
         pathPositions = new Queue<Vector3>(currentPath);
         Vector3 firstTarget = pathPositions.Dequeue();
         StartCoroutine(RotationCoroutine(firstTarget, rotationDuration));
@@ -75,30 +81,28 @@ public class Unit : MonoBehaviour
             transform.position = Vector3.Lerp(startPosition, endPosition, lerpStep);
             yield return null;
         }
+        
         transform.position = endPosition;
 
         if (pathPositions.Count > 0)
         {
             Debug.Log("Selecting the next position!");
+            
             StartCoroutine(RotationCoroutine(pathPositions.Dequeue(), rotationDuration));
         }
         else
         {
             Debug.Log("Movement finished!");
+            anim.SetBool("IsWalking", false);
             MovementFinished?.Invoke(this);
         }
     }
-    public BattleSystem battle;
-    public GameObject normalCamera;
-    public GameObject combatCamera;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            normalCamera.SetActive(false);
-            combatCamera.SetActive(true);
-            battle.state = BattleState.START;
-            StartCoroutine(battle.SetupBattle());
+            EventManager.Instance.ActivateBattleCam();
+            Destroy(other.gameObject);
         }
 
     }
