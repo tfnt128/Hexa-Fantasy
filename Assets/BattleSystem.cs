@@ -26,6 +26,11 @@ public class BattleSystem : MonoBehaviour
     public GameObject normalCamera;
     public GameObject combatCamera;
 
+    public Animator crossfade;
+
+    bool playerMiss = false;
+    bool enemyMiss = false;
+
     private void OnEnable()
     {
         EventManager.Instance.ActivatedBattle += OnBattleActivated;
@@ -33,13 +38,14 @@ public class BattleSystem : MonoBehaviour
 
     private void OnDisable()
     {
-        EventManager.Instance.ActivatedBattle += OnBattleActivated;
+        EventManager.Instance.ActivatedBattle -= OnBattleActivated;
     }
 
     private void Activate()
     {
         normalCamera.SetActive(false);
         combatCamera.SetActive(true);
+        crossfade.SetTrigger("StarTranstion");
         state = BattleState.START;
         StartCoroutine(SetupBattle());
     }
@@ -54,18 +60,30 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
-            combatCamera.SetActive(false);
-            normalCamera.SetActive(true);
 
+            StartCoroutine(battleCamTransition());
         }
 
     }
+    IEnumerator battleCamTransition()
+    {
+        crossfade.SetTrigger("Battle");
+        yield return new WaitForSecondsRealtime(0.5f);        
+        combatCamera.SetActive(false);
+        normalCamera.SetActive(true);
+        crossfade.SetTrigger("StarTranstion");
+    }
 
-
+    int cont = 0;
     public IEnumerator SetupBattle()
     {
-        GameObject playerGO = Instantiate(playerPrefab, playerBattleStation);
-        playerUnit = playerGO.GetComponent<Unit2>();
+        if(cont == 0)
+        {
+            GameObject playerGO = Instantiate(playerPrefab, playerBattleStation);
+            playerUnit = playerGO.GetComponent<Unit2>();
+            cont++;
+        }
+        
 
         GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
         enemyUnit = enemyGO.GetComponent<Unit2>();
@@ -81,16 +99,32 @@ public class BattleSystem : MonoBehaviour
         PlayerTurn();
     }
 
+    int damageAmount;
+    int miss;
     IEnumerator PlayerAttack()
     {
-        bool isDead = enemyUnit.TakeDamage(playerUnit.damage);
+        miss = Random.Range(0, 101);
+        Debug.Log(miss);
+        if(miss > 80)
+        {
+            dialogueText.text = "You missed!";
+        }
+        else
+        {
+            int damageAmount = Random.Range(playerUnit.damage, 13);
 
-        enemyHUD.SetHP(enemyUnit.currentHP);
-        dialogueText.text = "The attack is successful!";
+            bool isDead = enemyUnit.TakeDamage(damageAmount);
+            Debug.Log(damageAmount);
+
+            enemyHUD.SetHP(enemyUnit.currentHP);
+            dialogueText.text = "The attack is successful!";
+        }
+
+        
 
         yield return new WaitForSeconds(2f);
 
-        if (isDead)
+        if (enemyUnit.currentHP <= 0)
         {
             state = BattleState.WON;
             EndBattle();
@@ -104,17 +138,29 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator EnemyTurn()
     {
-        dialogueText.text = enemyUnit.unitName + " attacks!";
+        miss = Random.Range(0, 101);
+        Debug.Log(miss);
+        if (miss > 50)
+        {
+            dialogueText.text = enemyUnit.unitName + " missed!";
+        }
+        else
+        {
+            dialogueText.text = enemyUnit.unitName + " attacks!";
+            yield return new WaitForSeconds(1f);
+
+            int damageAmount = Random.Range(playerUnit.damage, 10);
+            bool isDead = playerUnit.TakeDamage(damageAmount);
+
+            playerHUD.SetHP(playerUnit.currentHP);
+        }
+        
+
+        
 
         yield return new WaitForSeconds(1f);
 
-        bool isDead = playerUnit.TakeDamage(enemyUnit.damage);
-
-        playerHUD.SetHP(playerUnit.currentHP);
-
-        yield return new WaitForSeconds(1f);
-
-        if (isDead)
+        if (playerUnit.currentHP <= 0)
         {
             state = BattleState.LOST;
             EndBattle();

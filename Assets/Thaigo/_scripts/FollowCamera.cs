@@ -10,7 +10,7 @@ public class FollowCamera : MonoBehaviour
         if (target != null)
         {
             // Calcula a posição alvo da câmera com base na posição do objeto alvo
-            Vector3 desiredPosition = new Vector3(target.position.x, target.position.y + 16, transform.position.z);
+            Vector3 desiredPosition = new Vector3(target.position.x, transform.position.y, target.position.z);
 
             // Suaviza o movimento da câmera em direção à posição alvo
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);

@@ -21,6 +21,8 @@ public class Unit : MonoBehaviour
     private Animator anim;
     private Rigidbody rb;
 
+    public Animator crossfade;
+
     private void Awake()
     {
         glowHighlight = GetComponent<GlowHighlight>();
@@ -101,9 +103,17 @@ public class Unit : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            EventManager.Instance.ActivateBattleCam();
-            Destroy(other.gameObject);
+            StartCoroutine(battleCamTransition());
+            Destroy(other.gameObject, 1f);
         }
 
+    }
+    IEnumerator battleCamTransition()
+    {
+        crossfade.SetTrigger("Battle");
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(0.5f);
+        Time.timeScale = 1;
+        EventManager.Instance.ActivateBattleCam();
     }
 }
