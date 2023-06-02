@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [SelectionBase]
@@ -31,6 +32,8 @@ public class Unit : MonoBehaviour
     public GameObject winPanel;
     public GameObject selectSystem;
 
+    public bool canPickUp;
+
     private void Awake()
     {
         glowHighlight = GetComponent<GlowHighlight>();
@@ -50,6 +53,7 @@ public class Unit : MonoBehaviour
 
     public void MoveThroughPath(List<Vector3> currentPath)
     {
+        canPickUp = false;
         anim.SetBool("IsWalking", true);
         pathPositions = new Queue<Vector3>(currentPath);
         Vector3 firstTarget = pathPositions.Dequeue();
@@ -102,6 +106,7 @@ public class Unit : MonoBehaviour
         }
         else
         {
+            canPickUp = true;
             Debug.Log("Movement finished!");
             anim.SetBool("IsWalking", false);
             MovementFinished?.Invoke(this);
@@ -110,11 +115,7 @@ public class Unit : MonoBehaviour
     public int id = -1;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("magic"))
-        {
-            MP++;
-            Destroy(other.gameObject);
-        }
+        
         if (other.CompareTag("win"))
         {
             if(score.score >= 10)
@@ -138,6 +139,26 @@ public class Unit : MonoBehaviour
             StartCoroutine(battleCamTransition(id));
             Destroy(other.gameObject, 1f);
         }
+
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("magic") && canPickUp)
+        {
+            
+            StartCoroutine(destroyBook(other));
+
+        }
+    }
+
+    IEnumerator destroyBook(Collider other)
+    {
+        anim.SetTrigger("PickUp");
+        canPickUp = false;
+        yield return new WaitForSecondsRealtime(.5f);
+        MP++;
+        Destroy(other.gameObject);
 
     }
     IEnumerator battleCamTransition(int id)
