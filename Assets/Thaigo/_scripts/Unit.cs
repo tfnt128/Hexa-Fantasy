@@ -23,6 +23,8 @@ public class Unit : MonoBehaviour
 
     public Animator crossfade;
 
+    public int MP = 0;
+
     private void Awake()
     {
         glowHighlight = GetComponent<GlowHighlight>();
@@ -99,21 +101,37 @@ public class Unit : MonoBehaviour
             MovementFinished?.Invoke(this);
         }
     }
+    public int id = -1;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("magic"))
         {
-            StartCoroutine(battleCamTransition());
+            MP++;
+            Destroy(other.gameObject);
+        }
+
+            if (other.CompareTag("Enemy"))
+        {
+            if(other.gameObject.GetComponent<Enemy_ID>().EnemyID == 0)
+            {
+                id = 0;
+            }
+            else
+            {
+                id = 1;
+            }
+            StartCoroutine(battleCamTransition(id));
             Destroy(other.gameObject, 1f);
         }
 
     }
-    IEnumerator battleCamTransition()
+    IEnumerator battleCamTransition(int id)
     {
         crossfade.SetTrigger("Battle");
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(0.5f);
         Time.timeScale = 1;
-        EventManager.Instance.ActivateBattleCam();
+        
+        EventManager.Instance.ActivateBattleCam(id);
     }
 }

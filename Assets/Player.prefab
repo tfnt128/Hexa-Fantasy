@@ -48,8 +48,8 @@ MonoBehaviour:
   unitName: Actual Rock
   unitLevel: 2
   damage: 8
-  maxHP: 25
-  currentHP: 25
+  maxHP: 100
+  currentHP: 100
 --- !u!1 &6450721039946225802
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,6 +60,7 @@ GameObject:
   m_Component:
   - component: {fileID: 758281047895446134}
   - component: {fileID: 453832024323124185}
+  - component: {fileID: 3344145193483836892}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -134,3 +135,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3344145193483836892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6450721039946225802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49623f2285dc37d4897bcffdb3bf651e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blinkDuration: 0.02
+  blinkCount: 4
+  blinkInterval: 0.05

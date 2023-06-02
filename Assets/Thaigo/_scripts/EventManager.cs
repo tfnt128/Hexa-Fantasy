@@ -24,22 +24,22 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public delegate void ActivateBattle(bool activate);
+    public delegate void ActivateBattle(bool activate, int id);
     public event ActivateBattle ActivatedBattle;
 
 
-    public void ActivateBattleCam()
+    public void ActivateBattleCam(int id)
     {
         if (ActivatedBattle != null)
         {
-            ActivatedBattle(true);
+            ActivatedBattle(true, id);
         }
     }
-    public void DeativateBattleCam()
+    public void DeativateBattleCam(int id)
     {
         if (ActivatedBattle != null)
         {
-            ActivatedBattle(false);
+            ActivatedBattle(false, id);
         }
     }
 }

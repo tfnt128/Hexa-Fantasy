@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4580223938307558884}
   - component: {fileID: 3763780388596319052}
+  - component: {fileID: 5472413381225496978}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -50,6 +51,19 @@ MonoBehaviour:
   damage: 5
   maxHP: 30
   currentHP: 30
+--- !u!114 &5472413381225496978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5046871492963100558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de7853bb349352c4bb10238fab4a323e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPoint: {fileID: 0}
 --- !u!1 &5492376629917588543
 GameObject:
   m_ObjectHideFlags: 0
@@ -60,6 +74,7 @@ GameObject:
   m_Component:
   - component: {fileID: 550875679801749208}
   - component: {fileID: 1402292708172043132}
+  - component: {fileID: 6316087201035874687}
   m_Layer: 0
   m_Name: Dwayne
   m_TagString: Untagged
@@ -134,3 +149,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6316087201035874687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5492376629917588543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49623f2285dc37d4897bcffdb3bf651e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blinkDuration: 0.02
+  blinkCount: 4
+  blinkInterval: 0.05

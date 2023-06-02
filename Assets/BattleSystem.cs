@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,9 +7,12 @@ public enum BattleState { START, PLAYERTURN, ENEMYTURN, WON, LOST }
 
 public class BattleSystem : MonoBehaviour
 {
+    public Unit player;
+    
 
     public GameObject playerPrefab;
     public GameObject enemyPrefab;
+    public GameObject enemy2Prefab;
 
     public Transform playerBattleStation;
     public Transform enemyBattleStation;
@@ -31,6 +35,17 @@ public class BattleSystem : MonoBehaviour
     bool playerMiss = false;
     bool enemyMiss = false;
 
+    Enemy_ID enemy;
+
+    public ShakeController playerCanvasShake;
+    public ShakeController enemyCanvasShake;
+
+    public ColorTransitionExample transitionColor;
+
+    public ScoreManager score;
+
+    public GameObject goldText;
+
     private void OnEnable()
     {
         EventManager.Instance.ActivatedBattle += OnBattleActivated;
@@ -39,6 +54,10 @@ public class BattleSystem : MonoBehaviour
     private void OnDisable()
     {
         EventManager.Instance.ActivatedBattle -= OnBattleActivated;
+    }
+    private void Update()
+    {
+        
     }
 
     private void Activate()
@@ -51,7 +70,7 @@ public class BattleSystem : MonoBehaviour
     }
 
 
-    private void OnBattleActivated(bool activate)
+    private void OnBattleActivated(bool activate, int id)
     {
 
         if (activate)
@@ -77,16 +96,25 @@ public class BattleSystem : MonoBehaviour
     int cont = 0;
     public IEnumerator SetupBattle()
     {
-        if(cont == 0)
+        goldText.SetActive(false);
+        if (cont == 0)
         {
             GameObject playerGO = Instantiate(playerPrefab, playerBattleStation);
             playerUnit = playerGO.GetComponent<Unit2>();
             cont++;
         }
-        
+        if(player.id == 0)
+        {
+            GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
+            enemyUnit = enemyGO.GetComponent<Unit2>();
+        }
+        else
+        {
+            GameObject enemyGO = Instantiate(enemy2Prefab, enemyBattleStation);
+            enemyUnit = enemyGO.GetComponent<Unit2>();
+        }
 
-        GameObject enemyGO = Instantiate(enemyPrefab, enemyBattleStation);
-        enemyUnit = enemyGO.GetComponent<Unit2>();
+        
 
         dialogueText.text = "A wild " + enemyUnit.unitName + " approaches...";
 
@@ -111,6 +139,10 @@ public class BattleSystem : MonoBehaviour
         }
         else
         {
+            enemyBattleStation.GetComponentInChildren<BlinkEffectExample>().TriggerBlinkEffect();
+
+            enemyCanvasShake.StartShake(.5f, 1f);
+
             int damageAmount = Random.Range(playerUnit.damage, 13);
 
             bool isDead = enemyUnit.TakeDamage(damageAmount);
@@ -139,16 +171,20 @@ public class BattleSystem : MonoBehaviour
     IEnumerator EnemyTurn()
     {
         miss = Random.Range(0, 101);
-        Debug.Log(miss);
+        enemyBattleStation.GetComponentInChildren<MoveObjectExample>().MoveToTargetPoint();
         if (miss > 50)
         {
             dialogueText.text = enemyUnit.unitName + " missed!";
+            yield return new WaitForSeconds(.8f);
         }
         else
         {
+            
             dialogueText.text = enemyUnit.unitName + " attacks!";
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(.2f);
 
+            playerBattleStation.GetComponentInChildren<BlinkEffectExample>().TriggerBlinkEffect();
+            playerCanvasShake.StartShake(.5f, 1f);
             int damageAmount = Random.Range(playerUnit.damage, 10);
             bool isDead = playerUnit.TakeDamage(damageAmount);
 
@@ -194,6 +230,8 @@ public class BattleSystem : MonoBehaviour
 
     IEnumerator PlayerHeal()
     {
+
+        transitionColor.StartTransition();
         playerUnit.Heal(5);
 
         playerHUD.SetHP(playerUnit.currentHP);
@@ -217,18 +255,39 @@ public class BattleSystem : MonoBehaviour
     {
         if (state != BattleState.PLAYERTURN)
             return;
-
-        StartCoroutine(PlayerHeal());
+        if(player.MP > 0)
+        {
+            StartCoroutine(PlayerHeal());
+            player.MP--;
+        }
+        else
+        {
+            StartCoroutine(notEnought());
+        }
+        
     }
 
     private IEnumerator VictoryToGameCore()
     {
         yield return new WaitForSeconds(2f);
-        EventManager.Instance.DeativateBattleCam();
+        dialogueText.text = "You found 1 Gold!";        
+        score.score++;
+        yield return new WaitForSeconds(2f);
+        EventManager.Instance.DeativateBattleCam(-1);
+        Destroy(enemyBattleStation.GetComponentInChildren<Unit2>().gameObject);
+        goldText.SetActive(true);
+
     }
     private IEnumerator DefeatToGameOverScreen()
     {
         yield return new WaitForSeconds(2f);
+    }
+
+    IEnumerator notEnought()
+    {
+        dialogueText.text = "Not enought MP";
+        yield return new WaitForSeconds(2f);
+        dialogueText.text = "Choose an action:";
     }
 
 }
