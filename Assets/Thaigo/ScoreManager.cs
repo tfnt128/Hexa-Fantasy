@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class ScoreManager : MonoBehaviour
 {
     public TMP_Text scoreText;
+    public TMP_Text scoreTextWin;
     public TMP_Text highScoreText;
     public Text mpText;
     public Unit player;
@@ -21,6 +22,7 @@ public class ScoreManager : MonoBehaviour
     private void Update()
     {
         scoreText.text = score.ToString() + " GOLD";
+        scoreTextWin.text = score.ToString();
         mpText.text = player.MP.ToString();
     }
 }

@@ -131,14 +131,17 @@ public class BattleSystem : MonoBehaviour
     int miss;
     IEnumerator PlayerAttack()
     {
+        playerBattleStation.GetComponentInChildren<MoveObjectExample>().MoveToTargetPoint();
         miss = Random.Range(0, 101);
         Debug.Log(miss);
         if(miss > 80)
         {
             dialogueText.text = "You missed!";
+            yield return new WaitForSeconds(.8f);
         }
         else
         {
+            yield return new WaitForSeconds(.2f);
             enemyBattleStation.GetComponentInChildren<BlinkEffectExample>().TriggerBlinkEffect();
 
             enemyCanvasShake.StartShake(.5f, 1f);
@@ -227,10 +230,11 @@ public class BattleSystem : MonoBehaviour
     {
         dialogueText.text = "Choose an action:";
     }
-
+    ChangeColorPlayer playerSprite;
     IEnumerator PlayerHeal()
     {
-
+        playerSprite = playerBattleStation.GetComponentInChildren<ChangeColorPlayer>();
+        playerSprite.StartTransition();
         transitionColor.StartTransition();
         playerUnit.Heal(5);
 

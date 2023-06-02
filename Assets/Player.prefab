@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3973862563508761831}
   - component: {fileID: 4363536997099518543}
+  - component: {fileID: 7188878695065500628}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -50,6 +51,20 @@ MonoBehaviour:
   damage: 8
   maxHP: 100
   currentHP: 100
+--- !u!114 &7188878695065500628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5674484368629161613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de7853bb349352c4bb10238fab4a323e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPoint: {fileID: 0}
+  isPlayer: 1
 --- !u!1 &6450721039946225802
 GameObject:
   m_ObjectHideFlags: 0
@@ -61,6 +76,7 @@ GameObject:
   - component: {fileID: 758281047895446134}
   - component: {fileID: 453832024323124185}
   - component: {fileID: 3344145193483836892}
+  - component: {fileID: 5270024534674304727}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -150,3 +166,17 @@ MonoBehaviour:
   blinkDuration: 0.02
   blinkCount: 4
   blinkInterval: 0.05
+--- !u!114 &5270024534674304727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6450721039946225802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 084028fcdf66cab4ab418007caaddad2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 453832024323124185}
+  targetColor: {r: 0.05816984, g: 1, b: 0, a: 0}

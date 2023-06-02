@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - EnemyTargetPoint
   - magic
+  - win
+  - PlayerTargetPoint
   layers:
   - Default
   - TransparentFX

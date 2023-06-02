@@ -25,6 +25,12 @@ public class Unit : MonoBehaviour
 
     public int MP = 0;
 
+    public ScoreManager score;
+
+    public GameObject scorePanel;
+    public GameObject winPanel;
+    public GameObject selectSystem;
+
     private void Awake()
     {
         glowHighlight = GetComponent<GlowHighlight>();
@@ -85,13 +91,13 @@ public class Unit : MonoBehaviour
             transform.position = Vector3.Lerp(startPosition, endPosition, lerpStep);
             yield return null;
         }
-        
+
         transform.position = endPosition;
 
         if (pathPositions.Count > 0)
         {
             Debug.Log("Selecting the next position!");
-            
+
             StartCoroutine(RotationCoroutine(pathPositions.Dequeue(), rotationDuration));
         }
         else
@@ -109,10 +115,19 @@ public class Unit : MonoBehaviour
             MP++;
             Destroy(other.gameObject);
         }
-
-            if (other.CompareTag("Enemy"))
+        if (other.CompareTag("win"))
         {
-            if(other.gameObject.GetComponent<Enemy_ID>().EnemyID == 0)
+            if(score.score >= 10)
+            {
+                scorePanel.SetActive(false);
+                winPanel.SetActive(true);
+                selectSystem.SetActive(false);
+            }
+        }
+
+        if (other.CompareTag("Enemy"))
+        {
+            if (other.gameObject.GetComponent<Enemy_ID>().EnemyID == 0)
             {
                 id = 0;
             }
@@ -131,7 +146,7 @@ public class Unit : MonoBehaviour
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(0.5f);
         Time.timeScale = 1;
-        
+
         EventManager.Instance.ActivateBattleCam(id);
     }
 }

@@ -9,9 +9,19 @@ public class MoveObjectExample : MonoBehaviour
 
     private Vector3 originalScale;
 
+    public bool isPlayer;
+
     void Start()
     {
-        targetPoint = GameObject.FindGameObjectWithTag("EnemyTargetPoint").transform;
+        if (!isPlayer)
+        {
+            targetPoint = GameObject.FindGameObjectWithTag("EnemyTargetPoint").transform;
+        }
+        else
+        {
+            targetPoint = GameObject.FindGameObjectWithTag("PlayerTargetPoint").transform;
+        }
+        
         originalScale = transform.localScale;
         originalPosition = transform.position;
     }
@@ -29,14 +39,27 @@ public class MoveObjectExample : MonoBehaviour
                     .setOnComplete(() => transform.localScale = originalScale);
             });
     }
+    float maxScaleEnemy = 1.5f;
+    float minScaleEnemy = 1.0f;
 
+    float maxScalePlayer = 1.0f;
+    float minScalePlayer = .7f;
     void UpdateScale(float ratio)
     {
         float distanceToTarget = Vector3.Distance(transform.position, targetPoint.position);
-        float maxScale = 1.5f;
-        float minScale = 1.0f;
-        float scaleMultiplier = Mathf.Lerp(maxScale, minScale, distanceToTarget / Vector3.Distance(originalPosition, targetPoint.position));
-        transform.localScale = originalScale * scaleMultiplier;
+        
+        if (!isPlayer)
+        {
+            float scaleMultiplier = Mathf.Lerp(maxScaleEnemy, minScaleEnemy, distanceToTarget / Vector3.Distance(originalPosition, targetPoint.position));
+            transform.localScale = originalScale * scaleMultiplier;
+        }
+        else
+        {
+            float scaleMultiplier = Mathf.Lerp(minScalePlayer, maxScalePlayer, distanceToTarget / Vector3.Distance(originalPosition, targetPoint.position));
+            transform.localScale = originalScale * scaleMultiplier;
+        }
+        
+        
     }
     private void Update()
     {
