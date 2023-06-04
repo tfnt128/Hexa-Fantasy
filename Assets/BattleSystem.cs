@@ -146,7 +146,7 @@ public class BattleSystem : MonoBehaviour
 
             enemyCanvasShake.StartShake(.5f, 1f);
 
-            int damageAmount = Random.Range(playerUnit.damage, 13);
+            int damageAmount = Random.Range(playerUnit.damage, 12);
 
             bool isDead = enemyUnit.TakeDamage(damageAmount);
             Debug.Log(damageAmount);
@@ -175,7 +175,7 @@ public class BattleSystem : MonoBehaviour
     {
         miss = Random.Range(0, 101);
         enemyBattleStation.GetComponentInChildren<MoveObjectExample>().MoveToTargetPoint();
-        if (miss > 50)
+        if (miss > 60)
         {
             dialogueText.text = enemyUnit.unitName + " missed!";
             yield return new WaitForSeconds(.8f);
@@ -188,7 +188,7 @@ public class BattleSystem : MonoBehaviour
 
             playerBattleStation.GetComponentInChildren<BlinkEffectExample>().TriggerBlinkEffect();
             playerCanvasShake.StartShake(.5f, 1f);
-            int damageAmount = Random.Range(playerUnit.damage, 10);
+            int damageAmount = Random.Range(playerUnit.damage, 12);
             bool isDead = playerUnit.TakeDamage(damageAmount);
 
             playerHUD.SetHP(playerUnit.currentHP);
@@ -236,7 +236,7 @@ public class BattleSystem : MonoBehaviour
         playerSprite = playerBattleStation.GetComponentInChildren<ChangeColorPlayer>();
         playerSprite.StartTransition();
         transitionColor.StartTransition();
-        playerUnit.Heal(5);
+        playerUnit.Heal(15);
 
         playerHUD.SetHP(playerUnit.currentHP);
         dialogueText.text = "You feel renewed strength!";
