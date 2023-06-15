@@ -32,6 +32,8 @@ public class BattleSystem : MonoBehaviour
 
     public Animator crossfade;
 
+    public AudioManager audio;
+
     bool playerMiss = false;
     bool enemyMiss = false;
 
@@ -62,6 +64,7 @@ public class BattleSystem : MonoBehaviour
 
     private void Activate()
     {
+        
         normalCamera.SetActive(false);
         combatCamera.SetActive(true);
         crossfade.SetTrigger("StarTranstion");
@@ -137,11 +140,15 @@ public class BattleSystem : MonoBehaviour
         if(miss > 80)
         {
             dialogueText.text = "You missed!";
+            yield return new WaitForSeconds(.2f);
+            audio.miss.Play();
             yield return new WaitForSeconds(.8f);
+            
         }
         else
         {
             yield return new WaitForSeconds(.2f);
+            audio.hit.Play();
             enemyBattleStation.GetComponentInChildren<BlinkEffectExample>().TriggerBlinkEffect();
 
             enemyCanvasShake.StartShake(.5f, 1f);
@@ -178,6 +185,8 @@ public class BattleSystem : MonoBehaviour
         if (miss > 60)
         {
             dialogueText.text = enemyUnit.unitName + " missed!";
+            yield return new WaitForSeconds(.2f);
+            audio.miss.Play();
             yield return new WaitForSeconds(.8f);
         }
         else
@@ -187,6 +196,7 @@ public class BattleSystem : MonoBehaviour
             yield return new WaitForSeconds(.2f);
 
             playerBattleStation.GetComponentInChildren<BlinkEffectExample>().TriggerBlinkEffect();
+            audio.hit.Play();
             playerCanvasShake.StartShake(.5f, 1f);
             int damageAmount = Random.Range(playerUnit.damage, 12);
             bool isDead = playerUnit.TakeDamage(damageAmount);
@@ -222,6 +232,8 @@ public class BattleSystem : MonoBehaviour
         else if (state == BattleState.LOST)
         {
             dialogueText.text = "You were defeated.";
+            audio.musicBattle.Stop();
+            audio.die.Play();
             StartCoroutine(DefeatToGameOverScreen());
         }
     }
@@ -234,6 +246,7 @@ public class BattleSystem : MonoBehaviour
     IEnumerator PlayerHeal()
     {
         playerSprite = playerBattleStation.GetComponentInChildren<ChangeColorPlayer>();
+        audio.heal.Play();
         playerSprite.StartTransition();
         transitionColor.StartTransition();
         playerUnit.Heal(15);
@@ -273,6 +286,8 @@ public class BattleSystem : MonoBehaviour
 
     private IEnumerator VictoryToGameCore()
     {
+        audio.musicBattle.Stop();
+        audio.enemyDie.Play();
         yield return new WaitForSeconds(2f);
         dialogueText.text = "You found 1 Gold!";        
         score.score++;
@@ -280,6 +295,7 @@ public class BattleSystem : MonoBehaviour
         EventManager.Instance.DeativateBattleCam(-1);
         Destroy(enemyBattleStation.GetComponentInChildren<Unit2>().gameObject);
         goldText.SetActive(true);
+        audio.music.Play();
 
     }
     private IEnumerator DefeatToGameOverScreen()

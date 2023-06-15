@@ -33,6 +33,8 @@ public class Unit : MonoBehaviour
     public GameObject selectSystem;
 
     public bool canPickUp;
+    
+    public AudioManager audio;
 
     private void Awake()
     {
@@ -157,12 +159,15 @@ public class Unit : MonoBehaviour
         anim.SetTrigger("PickUp");
         canPickUp = false;
         yield return new WaitForSecondsRealtime(.5f);
+        audio.grabBook.Play();
         MP++;
         Destroy(other.gameObject);
 
     }
     IEnumerator battleCamTransition(int id)
     {
+        audio.music.Stop();
+        audio.musicBattle.Play();
         crossfade.SetTrigger("Battle");
         Time.timeScale = 0;
         yield return new WaitForSecondsRealtime(0.5f);
