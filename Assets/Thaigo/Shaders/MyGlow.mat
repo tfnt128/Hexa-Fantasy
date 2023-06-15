@@ -55,7 +55,7 @@ Material:
     - _QueueOffset: 0
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 0}
-    - _GlowColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 0}
+    - _GlowColor: {r: 0.3962264, g: 0.38688144, b: 0.38688144, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5070753032977571579
 MonoBehaviour:

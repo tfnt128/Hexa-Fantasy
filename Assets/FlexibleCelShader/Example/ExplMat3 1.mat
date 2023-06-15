@@ -88,7 +88,7 @@ Material:
     - _OutlineSize: 0
     - _Parallax: 0.02
     - _RampLevels: 2
-    - _RimAlpha: 1
+    - _RimAlpha: 0.33
     - _RimDropOff: 0
     - _RimPower: 0.318
     - _SmoothnessTextureChannel: 0
