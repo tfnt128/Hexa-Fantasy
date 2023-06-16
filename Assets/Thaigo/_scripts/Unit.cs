@@ -120,7 +120,7 @@ public class Unit : MonoBehaviour
         
         if (other.CompareTag("win"))
         {
-            if(score.score >= 10)
+            if(score.score >= 5)
             {
                 scorePanel.SetActive(false);
                 winPanel.SetActive(true);

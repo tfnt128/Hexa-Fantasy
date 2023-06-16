@@ -59,7 +59,7 @@ public class BattleSystem : MonoBehaviour
     }
     private void Update()
     {
-        
+        Debug.Log(state);
     }
 
     private void Activate()
@@ -134,6 +134,7 @@ public class BattleSystem : MonoBehaviour
     int miss;
     IEnumerator PlayerAttack()
     {
+        state = BattleState.ENEMYTURN;
         playerBattleStation.GetComponentInChildren<MoveObjectExample>().MoveToTargetPoint();
         miss = Random.Range(0, 101);
         Debug.Log(miss);
@@ -272,6 +273,7 @@ public class BattleSystem : MonoBehaviour
     {
         if (state != BattleState.PLAYERTURN)
             return;
+        state = BattleState.ENEMYTURN;
         if(player.MP > 0)
         {
             StartCoroutine(PlayerHeal());

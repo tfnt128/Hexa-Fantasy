@@ -21,7 +21,7 @@ public class ScoreManager : MonoBehaviour
     }
     private void Update()
     {
-        scoreText.text = score.ToString() + " GOLD";
+        scoreText.text = score.ToString();
         scoreTextWin.text = score.ToString();
         mpText.text = player.MP.ToString();
     }
