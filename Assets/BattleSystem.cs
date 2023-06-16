@@ -48,6 +48,8 @@ public class BattleSystem : MonoBehaviour
 
     public GameObject goldText;
 
+    public GameObject gameOver;
+
     private void OnEnable()
     {
         EventManager.Instance.ActivatedBattle += OnBattleActivated;
@@ -273,9 +275,10 @@ public class BattleSystem : MonoBehaviour
     {
         if (state != BattleState.PLAYERTURN)
             return;
-        state = BattleState.ENEMYTURN;
+        
         if(player.MP > 0)
         {
+            state = BattleState.ENEMYTURN;
             StartCoroutine(PlayerHeal());
             player.MP--;
         }
@@ -303,6 +306,7 @@ public class BattleSystem : MonoBehaviour
     private IEnumerator DefeatToGameOverScreen()
     {
         yield return new WaitForSeconds(2f);
+        gameOver.SetActive(true);
     }
 
     IEnumerator notEnought()
